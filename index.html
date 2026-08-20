@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JASTICA – 5S Audit Sheet</title>
+<title>JASTICA – 5S Monthly Audit Sheet</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+Sinhala:wght@400;500;600;700&family=Source+Serif+4:wght@500;600;700&display=swap');
 
@@ -259,16 +259,16 @@
   /* ---------- Add Plant ---------- */
   .plant-site-wrap{display:flex;gap:6px;align-items:center;}
   .plant-site-wrap select{flex:1;min-width:0;}
+  .add-plant-btn{white-space:nowrap;padding:8px 10px;font-size:12px;}
   #addPlantModal{display:none;position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.45);align-items:center;justify-content:center;padding:20px;}
   .add-plant-card{width:min(430px,100%);background:#fff;border-radius:14px;box-shadow:0 24px 70px rgba(0,0,0,.28);padding:26px;}
   .add-plant-card h2{font-family:'Source Serif 4',serif;margin:0 0 5px;font-size:25px;}
   .add-plant-card p{margin:0 0 18px;color:var(--ink-soft);font-size:13px;}
   .plant-help{font-size:11.5px;color:var(--ink-soft);margin-top:5px;}
   #addPlantMsg{min-height:20px;margin-top:10px;font-size:12.5px;color:var(--red);}
-  #btnSaveProgress{border:1px solid #2F7A52;color:#2F7A52;background:#fff;}
-  #btnSaveProgress:hover{background:#eef7f1;}
   @media (max-width:640px){
     .plant-site-wrap{width:100%;}
+    .add-plant-btn{padding:8px 9px;}
   }
 
   /* ---------- Authentication ---------- */
@@ -312,7 +312,7 @@
   <div class="auth-card">
     <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#2F7A52;font-weight:700;margin-bottom:6px;">JASTICA</div>
     <h2>5S Audit Login</h2>
-    <p>Sign in with your JASTICA external auditor account. You can access only the plant/site(s) assigned to your account.</p>
+    <p>Sign in with your assigned auditor account. Internal auditors can access only their assigned site(s); external auditors can access all sites.</p>
     <form id="loginForm">
       <div class="auth-field"><label for="loginUsername">Username</label><input id="loginUsername" autocomplete="username" required></div>
       <div class="auth-field"><label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
@@ -326,15 +326,15 @@
 <div id="signupModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.45);align-items:center;justify-content:center;padding:20px;">
   <div class="auth-card" style="max-height:90vh;overflow:auto;">
     <h2 style="font-size:24px;">Auditor Sign Up</h2>
-    <p>Create your JASTICA external auditor account and select the plant/site(s) you are authorised to audit.</p>
+    <p>Create your assigned auditor account. The predefined Vidullanka auditor names will use their configured auditor type automatically.</p>
     <form id="signupForm">
       <div class="auth-field"><label>Full name</label><input id="signupFullName" required></div>
       <div class="auth-field"><label>Username</label><input id="signupUsername" autocomplete="username" required></div>
       <div class="auth-field"><label>Password</label><input id="signupPassword" type="password" autocomplete="new-password" required></div>
       <div class="auth-field"><label>Auditor type</label>
-        <div class="auditor-type"><label><input type="radio" name="signupRole" value="external" checked disabled> External Auditor</label></div>
+        <div class="auditor-type"><label><input type="radio" name="signupRole" value="internal" checked> Internal Auditor</label><label><input type="radio" name="signupRole" value="external"> External Auditor</label></div>
       </div>
-      <div class="auth-field" id="signupSitesField"><label>Assigned plant/site(s)</label><div id="signupSites" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div></div>
+      <div class="auth-field" id="signupSitesField"><label>Assigned site(s) — Internal auditors</label><div id="signupSites" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;"></div></div>
       <button id="signupSubmit" class="btn-primary" type="submit" style="width:100%;">Create account</button>
       <button id="signupCancel" class="btn-ghost" type="button" style="width:100%;margin-top:8px;">Cancel</button>
       <div id="signupMsg" style="min-height:20px;margin-top:10px;font-size:12.5px;color:var(--red);"></div>
@@ -344,16 +344,16 @@
 
 <div id="addPlantModal">
   <div class="add-plant-card">
-    <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#2F7A52;font-weight:700;margin-bottom:6px;">Plant Management</div>
-    <h2>Add New Plant</h2>
-    <p>Add a new plant/site to JASTICA. The new plant will be assigned to your external auditor account so you can enter its audits.</p>
+    <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#2F7A52;font-weight:700;margin-bottom:6px;">Plant Site Management</div>
+    <h2>Add New Company</h2>
+    <p>Add a new plant/site to the Plant Site list. Existing plants and their saved audits will remain unchanged.</p>
     <form id="addPlantForm">
       <div class="auth-field">
-        <label for="newPlantName">Plant Name / Code</label>
+        <label for="newPlantName">Company Name / Code</label>
         <input id="newPlantName" maxlength="50" placeholder="e.g. ABC or NEW COMPANY" required>
-        <div class="plant-help">Use a short unique plant/site code or name.</div>
+        <div class="plant-help">Use a short unique plant code or name.</div>
       </div>
-      <button id="addPlantSubmit" class="btn-primary" type="submit" style="width:100%;">Add Plant</button>
+      <button id="addPlantSubmit" class="btn-primary" type="submit" style="width:100%;">Add Company</button>
       <button id="addPlantCancel" class="btn-ghost" type="button" style="width:100%;margin-top:8px;">Cancel</button>
       <div id="addPlantMsg"></div>
     </form>
@@ -367,7 +367,7 @@
   </nav>
   <div class="mast">
     <p class="mast-eyebrow">JASTICA · 5S Online Audit Form</p>
-    <h1>5S Audit Sheet</h1>
+    <h1>5S Monthly Audit Sheet</h1>
     <p class="sub">Service &amp; Manufacturing Sectors — 5S, KPIs, and Japanese Management Implementations</p>
     <div class="mast-brand">
       <span class="brand-chip"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAABgCAYAAACkLtSSAAAR2klEQVR4nOVdfXRV1ZX/7X3OfR/5DiEgiEgLIiCimFZtlT6rLr/F6hiQjqOttdhxdbWrtq4485mZmSlaKgUUq5UWNCoIISWQBHIhATTL0FEAAABJRU5ErkJggg==" alt="Bridgp Dynamics logo" /></span>
@@ -390,22 +390,15 @@
         <select id="f-site">
           <option value="">— select site —</option>
         </select>
-        <button class="btn-ghost btn-sm" id="btnAddPlant" type="button" title="Add a new plant/site">＋ Add Company</button>
+        <button type="button" class="btn-ghost add-plant-btn" id="addPlantBtn" title="Add a new company">＋ Add Company</button>
       </div>
     </div>
     <div class="field">
       <label for="f-dept">Department / Sub-area</label>
       <input id="f-dept" type="text" placeholder="e.g. Powerhouse / Intake / Switchyard" />
     </div>
-    <div class="field" style="max-width:150px;">
-      <label for="f-audit-type">Audit Type</label>
-      <select id="f-audit-type">
-        <option value="monthly">Monthly Audit</option>
-        <option value="annual">Annual Audit</option>
-      </select>
-    </div>
     <div class="field" style="max-width:160px;">
-      <label for="f-month" id="periodLabel">Audit period</label>
+      <label for="f-month">Audit month</label>
       <input id="f-month" type="month" />
     </div>
     <div class="field">
@@ -456,16 +449,25 @@
   const root = document.getElementById('jasteca-root');
 
   // ---------------- Plant sites ----------------
-  const DEFAULT_SITES = ['BBO','BKN','BTO','EME','GNT','HOF','HRN','LKM','MGT','MVB','ORIC','RDP','UDW','VBL','WMB'];
-  let serverSites = [...DEFAULT_SITES];
+  const SITES = ['BBO','BKN','BTO','EME','GNT','HOF','HRN','LKM','MGT','MVB','ORIC','RDP','UDW','VBL','WMB'];
+  const CUSTOM_SITES_KEY = 'jasteca_custom_plant_sites_v1';
 
-  function getAllSites(){ return [...new Set(serverSites)]; }
-
-  async function loadSiteDirectory(){
+  function getCustomSites(){
     try{
-      const body=await api('/api/sites');
-      if(Array.isArray(body.sites) && body.sites.length) serverSites=[...new Set(body.sites.map(x=>String(x).trim().toUpperCase()).filter(Boolean))];
-    }catch(e){ console.error(e); }
+      const raw=localStorage.getItem(CUSTOM_SITES_KEY);
+      const list=JSON.parse(raw||'[]');
+      return Array.isArray(list)
+        ? list.map(x=>String(x||'').trim().toUpperCase()).filter(Boolean)
+        : [];
+    }catch(_e){ return []; }
+  }
+
+  function getAllSites(){
+    return [...new Set([...SITES, ...getCustomSites()])];
+  }
+
+  function saveCustomSites(list){
+    localStorage.setItem(CUSTOM_SITES_KEY, JSON.stringify([...new Set(list)]));
   }
 
   // ---------------- Data model ----------------
@@ -719,7 +721,7 @@
   // ---------------- State ----------------
   function blankAudit(){
     return {
-      meta:{org:'JASTICA', site:'', dept:'', month:'', auditType:'monthly', auditor:'', auditorType:''},
+      meta:{org:'JASTICA', site:'', dept:'', month:'', auditor:'', auditorType:''},
       scores:{},          // itemKey -> 1..5
       sectionNotes:{},    // sectionId -> text
       q14:{ text:{}, score:{} }, // qid -> text / score(0-10)
@@ -730,31 +732,9 @@
   }
   let audit = blankAudit();
 
-  // ---------------- Partial-save / auto-save state ----------------
-  let partialSaveTimer = null;
-  let partialSaveInFlight = false;
-  let partialSaveQueued = false;
-  let lastPartialSaveAt = 0;
-
-  function enteredMarkCount(){
-    const sectionMarks = Object.values(audit.scores || {}).filter(v => v !== undefined && v !== null && v !== '').length;
-    const q14Marks = Object.values((audit.q14 && audit.q14.score) || {}).filter(v => v !== undefined && v !== null && v !== '').length;
-    return sectionMarks + q14Marks;
-  }
-
-  function queuePartialSave(){
-    if(!currentUser || !audit.meta.site || !audit.meta.month) return;
-    partialSaveQueued = true;
-    clearTimeout(partialSaveTimer);
-    partialSaveTimer = setTimeout(async ()=>{
-      partialSaveQueued = false;
-      await savePartialAudit(false);
-    }, 1200);
-  }
-
   // ---------------- DOM refs ----------------
   const $ = sel => root.querySelector(sel);
-  const elOrg = $('#f-org'), elSite = $('#f-site'), elDept = $('#f-dept'), elMonth = $('#f-month'), elAuditType = $('#f-audit-type'), elPeriodLabel = document.getElementById('periodLabel'), elAuditor = $('#f-auditor'), elAuditorOther = $('#f-auditor-other');
+  const elOrg = $('#f-org'), elSite = $('#f-site'), elDept = $('#f-dept'), elMonth = $('#f-month'), elAuditor = $('#f-auditor'), elAuditorOther = $('#f-auditor-other');
   const auditorInternal = $('#auditorInternal'), auditorExternal = $('#auditorExternal');
   const authScreen = document.getElementById('authScreen');
   const loginForm = document.getElementById('loginForm');
@@ -771,6 +751,7 @@
   const gaugeSvg = $('#gaugeSvg');
   const breakdownEl = $('#breakdown');
 
+  const addPlantBtn = document.getElementById('addPlantBtn');
   const addPlantModal = document.getElementById('addPlantModal');
   const addPlantForm = document.getElementById('addPlantForm');
   const addPlantCancel = document.getElementById('addPlantCancel');
@@ -782,7 +763,8 @@
     const sites=getAllSites();
     elSite.innerHTML =
       '<option value="">— select site —</option>' +
-      sites.map(s=>`<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('');
+      sites.map(s=>`<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('') +
+      '<option value="__add_new__">＋ Add new plant…</option>';
     if(selectedSite && sites.includes(selectedSite)) elSite.value=selectedSite;
   }
 
@@ -862,7 +844,6 @@
       if(audit.sectionNotes[section.id]) notesArea.classList.add('show');
       notesArea.querySelector('textarea').addEventListener('input', e=>{
         audit.sectionNotes[section.id]=e.target.value;
-        queuePartialSave();
       });
       inner.appendChild(notesToggle);
       inner.appendChild(notesArea);
@@ -882,7 +863,6 @@
       audit.scores[key] = (audit.scores[key]===v) ? undefined : v; // click again to clear
       if(audit.scores[key]===undefined) delete audit.scores[key];
       refreshAll();
-      queuePartialSave();
     };
   }
 
@@ -960,13 +940,11 @@
       ta.addEventListener('input', ()=>{
         audit.q14.text[q.id]=ta.value;
         updWc();
-        queuePartialSave();
       });
       scoreInput.addEventListener('input', ()=>{
         let v = scoreInput.value==='' ? undefined : Math.max(0,Math.min(10, parseInt(scoreInput.value,10)||0));
         if(v===undefined){ delete audit.q14.score[q.id]; } else { audit.q14.score[q.id]=v; }
         refreshAll();
-        queuePartialSave();
       });
       inner.appendChild(wrap);
     });
@@ -996,7 +974,7 @@
       <textarea id="specialNote" style="width:100%;min-height:70px;margin-top:8px;font-family:inherit;font-size:13.5px;padding:9px 10px;border:1px solid var(--line);border-radius:6px;resize:vertical;">${audit.specialNote||''}</textarea>
     </div>`;
     bottomWrap.appendChild(noteCard);
-    noteCard.querySelector('#specialNote').addEventListener('input', e=>{ audit.specialNote = e.target.value; queuePartialSave(); });
+    noteCard.querySelector('#specialNote').addEventListener('input', e=>{ audit.specialNote = e.target.value; });
 
     const grand = document.createElement('div');
     grand.className='grandcard';
@@ -1038,19 +1016,12 @@
     saveCard.style.marginTop='14px';
     saveCard.innerHTML = `
       <div style="padding:16px 18px;">
-        <div style="background:#eef7f1;border:1px solid #a9cdb5;border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:13px;line-height:1.5;">
-          <b>Progress saving:</b> Your entered marks are automatically saved as a draft while you work. You can leave and return later using <b>Load Saved Audit</b>.
-        </div>
         <div style="background:#fff8e8;border:1px solid #e2c36b;border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:13px;line-height:1.5;">
-          <b>Final submission:</b> Use <b>Save Audit</b> only after all marks, Q14 written responses, the Special Note by the Auditor, and the e-signature have been completed and checked.
+          <b>Important:</b> Do not click <b>Save Audit</b> until all marks, Q14 written responses, the Special Note by the Auditor, and the e-signature have been completed and checked.
         </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="btn-ghost" id="btnSaveProgress" type="button" style="flex:1;min-width:180px;">Save Progress</button>
-          <button class="btn-primary" id="btnSave" type="button" style="flex:1;min-width:180px;">Save Audit</button>
-        </div>
+        <button class="btn-primary" id="btnSave" type="button" style="width:100%;">Save Audit</button>
       </div>`;
     bottomWrap.appendChild(saveCard);
-    saveCard.querySelector('#btnSaveProgress').addEventListener('click', ()=>savePartialAudit(true));
     saveCard.querySelector('#btnSave').addEventListener('click', saveAudit);
     initSignaturePad();
   }
@@ -1116,7 +1087,6 @@
       ctx.closePath();
       audit.signature.dataUrl = canvas.toDataURL('image/png');
       audit.signature.signedAt = new Date().toISOString();
-      queuePartialSave();
 
       const status = document.getElementById('signatureStatus');
       if(status){
@@ -1208,7 +1178,6 @@
     audit.meta.org = 'JASTICA';
     elSite.value = audit.meta.site||'';
     elDept.value = audit.meta.dept||'';
-    elAuditType.value = audit.meta.auditType || 'monthly';
     elMonth.value = audit.meta.month||'';
     elAuditor.value = audit.meta.auditor || currentUser?.full_name || '';
     if(!audit.meta.auditor) audit.meta.auditor = currentUser?.full_name || '';
@@ -1220,43 +1189,17 @@
   }
   elSite.addEventListener('change', async e=>{
     if(e.target.value==='__add_new__'){
-      e.target.value=audit.meta.site||'';
+      const previousSite=audit.meta.site||'';
+      e.target.value=previousSite;
       openAddPlantModal();
       return;
     }
     audit.meta.site=e.target.value;
     await refreshLoadSelect();
-    queuePartialSave();
     refreshAll();
   });
-  elDept.addEventListener('input', e=> { audit.meta.dept=e.target.value; queuePartialSave(); });
-  function syncAuditPeriodUI(){
-    const annual=elAuditType.value==='annual';
-    elMonth.type=annual?'number':'month';
-    elMonth.min=annual?'2000':undefined;
-    elMonth.max=annual?String(new Date().getFullYear()+20):undefined;
-    elMonth.placeholder=annual?'YYYY':'';
-    elPeriodLabel.textContent=annual?'Audit year':'Audit period';
-    if(annual){
-      const m=String(audit.meta.month||'').match(/^(\d{4})/);
-      elMonth.value=m?m[1]:String(new Date().getFullYear());
-    }else if(/^\d{4}$/.test(String(audit.meta.month||''))){
-      elMonth.value=String(audit.meta.month)+'-01';
-      audit.meta.month=elMonth.value;
-    }else elMonth.value=audit.meta.month||'';
-  }
-  elAuditType.addEventListener('change', ()=>{
-    audit.meta.auditType=elAuditType.value;
-    if(elAuditType.value==='annual'){
-      audit.meta.month=String(new Date().getFullYear());
-    }else{
-      audit.meta.month=new Date().toISOString().slice(0,7);
-    }
-    syncAuditPeriodUI();
-    refreshLoadSelect();
-    queuePartialSave();
-  });
-  elMonth.addEventListener('input', e=> { audit.meta.month=e.target.value; queuePartialSave(); });
+  elDept.addEventListener('input', e=> audit.meta.dept=e.target.value);
+  elMonth.addEventListener('input', e=> audit.meta.month=e.target.value);
 
   function openAddPlantModal(){
     if(!currentUser){
@@ -1276,8 +1219,8 @@
     addPlantMsg.textContent='';
   }
 
+  addPlantBtn?.addEventListener('click', openAddPlantModal);
   addPlantCancel?.addEventListener('click', closeAddPlantModal);
-  document.getElementById('btnAddPlant')?.addEventListener('click', openAddPlantModal);
 
   addPlantModal?.addEventListener('click', e=>{
     if(e.target===addPlantModal) closeAddPlantModal();
@@ -1285,26 +1228,47 @@
 
   addPlantForm?.addEventListener('submit', async e=>{
     e.preventDefault();
-    const site=String(newPlantName.value||'').trim().toUpperCase().replace(/\s+/g,' ');
+    const site=String(newPlantName.value||'').trim().toUpperCase().replace(/\\s+/g,' ');
     addPlantMsg.style.color='var(--red)';
     addPlantMsg.textContent='';
-    if(!site){ addPlantMsg.textContent='Please enter a plant/site name or code.'; return; }
-    if(site.length<2){ addPlantMsg.textContent='Plant/site name must contain at least 2 characters.'; return; }
+
+    if(!site){
+      addPlantMsg.textContent='Please enter a plant name or code.';
+      return;
+    }
+    if(site==='__ADD_NEW__'){
+      addPlantMsg.textContent='Please choose a different plant name.';
+      return;
+    }
+    if(site.length<2){
+      addPlantMsg.textContent='Plant name/code must contain at least 2 characters.';
+      return;
+    }
+
+    const existing=getAllSites();
+    if(existing.includes(site)){
+      addPlantMsg.textContent=`${site} already exists in the Plant Site list.`;
+      return;
+    }
+
     try{
-      const body=await api('/api/sites',{method:'POST',body:JSON.stringify({site})});
-      await loadSiteDirectory();
-      audit.meta.site=body.site;
+      const custom=getCustomSites();
+      custom.push(site);
+      saveCustomSites(custom);
+
+      audit.meta.site=site;
       applyUserAccess();
-      elSite.value=body.site;
       await refreshLoadSelect();
       refreshAll();
+
       addPlantMsg.style.color='var(--green-deep)';
-      addPlantMsg.textContent=`${body.site} added successfully and assigned to your account.`;
-      showStatus(`${body.site} was added. You can now enter its monthly or annual audit marks.`);
-      setTimeout(closeAddPlantModal,700);
+      addPlantMsg.textContent=`${site} added successfully.`;
+      showStatus(`${site} was added. You can now enter the audit marks for this plant.`);
+
+      setTimeout(closeAddPlantModal,500);
     }catch(err){
       console.error(err);
-      addPlantMsg.textContent=err.message||'Could not add this plant.';
+      addPlantMsg.textContent='Could not add this plant on this device.';
     }
   });
 
@@ -1363,7 +1327,6 @@
         });
       }
 
-      if(currentUser.role !== 'admin') auditorDirectory = auditorDirectory.filter(a => a.full_name === currentUser.full_name);
       const options = auditorDirectory.map(a =>
         `<option value="${escHtml(a.full_name)}">${escHtml(a.full_name)} · ${a.role==='external'?'External Auditor':'Internal Auditor'}</option>`
       ).join('');
@@ -1371,7 +1334,7 @@
       elAuditor.innerHTML =
         '<option value="">— select auditor —</option>' +
         options +
-        (currentUser.role==='admin' ? '<option value="__other__">Other / Enter name</option>' : '');
+        '<option value="__other__">Other / Enter name</option>';
 
       const current=audit.meta.auditor || currentUser.full_name || '';
       if(auditorDirectory.some(a=>a.full_name===current)){
@@ -1442,13 +1405,11 @@
     syncAuditorTypeFromSelection();
     applyAuditorSelection();
     refreshAll();
-    queuePartialSave();
   });
 
   elAuditorOther.addEventListener('input',()=>{
     applyAuditorSelection();
     refreshAll();
-    queuePartialSave();
   });
 
   [auditorInternal,auditorExternal].forEach(r=>{
@@ -1458,7 +1419,6 @@
         auditorInternal.checked=r.value==='internal';
         auditorExternal.checked=r.value==='external';
         refreshAll();
-        queuePartialSave();
       }
     });
   });
@@ -1474,6 +1434,7 @@
 
     sessionUser.textContent = `${currentUser.full_name} · ${roleLabel}`;
     const navAdminLink = document.getElementById('navAdminLink');
+    // Admin navigation is shown only to a database user whose role is 'admin'.
     if(navAdminLink) navAdminLink.style.display = currentUser.role === 'admin' ? 'inline-block' : 'none';
     elOrg.value = 'JASTICA';
     audit.meta.org = 'JASTICA';
@@ -1485,13 +1446,21 @@
       audit.meta.auditorType=currentUser.role==='external'?'external':'internal';
     }
 
+    const allSites = getAllSites();
+    // Newly added plants are available to the signed-in auditor as well as
+    // the existing predefined plants. Internal auditors still retain their
+    // normal assigned-site restriction for the predefined sites.
     const assignedSites = Array.isArray(currentUser.sites) ? currentUser.sites : [];
-    const allowed = currentUser.role === 'admin' ? getAllSites() : assignedSites;
+    const customSites = getCustomSites();
+    const allowed = (currentUser.role === 'external' || currentUser.role === 'admin')
+      ? allSites
+      : [...new Set([...assignedSites, ...customSites])];
 
     const selectedSite = audit.meta.site;
     elSite.innerHTML =
       '<option value="">— select site —</option>' +
-      allowed.map(s=>`<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('');
+      allowed.map(s=>`<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('') +
+      '<option value="__add_new__">＋ Add new plant…</option>';
 
     if(selectedSite && allowed.includes(selectedSite)){
       elSite.value=selectedSite;
@@ -1522,106 +1491,117 @@
   }
 
   async function getAuditsForSite(site){
-    const q = site ? `/api/audits?site=${encodeURIComponent(site)}` : '/api/audits';
-    const body = await api(q);
-    return body.audits||[];
+    if(!dbReady) return [];
+    try{
+      const q = site ? `/api/audits?site=${encodeURIComponent(site)}` : '/api/audits';
+      const body = await api(q);
+      return body.audits || [];
+    }catch(e){
+      console.error(e);
+      showStatus('Could not load saved audits: '+e.message,true);
+      return [];
+    }
   }
 
   async function refreshLoadSelect(){
     if(!currentUser) return;
-    try{
-      let list=await getAuditsForSite(audit.meta.site||'');
-      const allowedSites=new Set(currentUser.role==='admin' ? getAllSites() : (currentUser.sites||[]));
-      list=list.filter(x=>allowedSites.has(x.site));
-      list.sort((a,b)=>String(b.audit_month||'').localeCompare(String(a.audit_month||'')) || String(a.site||'').localeCompare(String(b.site||'')));
-      const current=(audit.meta.site && audit.meta.month ? `${audit.meta.site}|${audit.meta.auditType||'monthly'}|${audit.meta.month}` : '');
-      elLoadSelect.innerHTML='<option value="">— select record —</option>'+list.map(x=>{
-        const type=x.audit_type||'monthly';
-        const period=x.audit_month||'';
-        const label=`${x.site||''} · ${type==='annual'?'Annual':'Monthly'} · ${period} · ${x.overall_total||0}/${GRAND_MAX+Q14_MAX}`;
-        return `<option value="${escHtml((x.site||'')+'|'+type+'|'+period)}">${escHtml(label)}</option>`;
+
+    // IMPORTANT: the saved-audit dropdown is based on the signed-in user's
+    // access scope, NOT on the currently selected audit. This keeps all other
+    // records visible after one record is loaded.
+    let list = await getAuditsForSite('');
+
+    const isExternalOrAdmin = currentUser.role==='external' || currentUser.role==='admin';
+    if(!isExternalOrAdmin){
+      const allowedSites = new Set([
+        ...(Array.isArray(currentUser.sites)?currentUser.sites:[]),
+        ...getCustomSites()
+      ]);
+      list = list.filter(x=>allowedSites.has(x.site));
+    }
+
+    list.sort((a,b)=>{
+      const byMonth=String(b.audit_month||'').localeCompare(String(a.audit_month||''));
+      if(byMonth!==0) return byMonth;
+      return String(a.site||'').localeCompare(String(b.site||''));
+    });
+
+    const previousValue =
+      elLoadSelect.value ||
+      (audit.meta.site && audit.meta.month ? `${audit.meta.site}|${audit.meta.month}` : '');
+
+    elLoadSelect.innerHTML =
+      '<option value="">— select record —</option>' +
+      list.map(x=>{
+        const month=x.audit_month||'';
+        const type=(x.auditor_type||'').toLowerCase()==='external' ? 'External Auditor' : 'Internal Auditor';
+        const label=`${x.site||''} · ${month} · ${x.auditor||''} · ${type} (${x.overall_total||0}/${GRAND_MAX+Q14_MAX})`;
+        return `<option value="${escHtml((x.site||'')+'|'+month)}">${escHtml(label)}</option>`;
       }).join('');
-      if(current && [...elLoadSelect.options].some(o=>o.value===current)) elLoadSelect.value=current;
-    }catch(e){ showStatus('Could not load saved audits: '+e.message,true); }
+
+    if(previousValue && [...elLoadSelect.options].some(o=>o.value===previousValue)){
+      elLoadSelect.value=previousValue;
+    }
   }
 
   async function loadAudit(compositeValue){
     if(!compositeValue || !currentUser) return;
+
     const parts=compositeValue.split('|');
-    const site=parts[0], type=parts[1]||'monthly', period=parts.slice(2).join('|');
-    if(!site || !period) return;
+    const site=parts[0], month=parts.slice(1).join('|');
+    if(!site || !month) return;
+
     try{
-      const body=await api(`/api/audit?site=${encodeURIComponent(site)}&type=${encodeURIComponent(type)}&period=${encodeURIComponent(period)}`);
+      const body=await api(`/api/audit?site=${encodeURIComponent(site)}&month=${encodeURIComponent(month)}`);
       const data=body.audit;
+      const savedType=(data.auditor_type || data.auditorType || data.audit?.meta?.auditorType || '').toLowerCase();
+
       audit={
-        meta:{org:'JASTICA',site:data.site||site,dept:data.department||'',month:data.audit_month||period,auditType:data.audit_type||type,auditor:data.auditor||currentUser.full_name,auditorType:'external'},
-        scores:data.scores||{},sectionNotes:data.section_notes||{},q14:data.q14||{text:{},score:{}},specialNote:data.special_note||'',signature:data.signature||{dataUrl:'',signedAt:null},savedAt:data.saved_at||data.updated_at||null
+        meta:{
+          org:'JASTICA',
+          site:data.site||site,
+          dept:data.department||'',
+          month:data.audit_month||month,
+          auditor:data.auditor || data.audit?.meta?.auditor || '',
+          auditorType:savedType==='external'?'external':savedType==='internal'?'internal':''
+        },
+        scores:data.scores||{},
+        sectionNotes:data.section_notes||{},
+        q14:data.q14||{text:{},score:{}},
+        specialNote:data.special_note||'',
+        signature:data.signature||{dataUrl:'',signedAt:null},
+        savedAt:data.saved_at||data.updated_at||null
       };
-      fullRender(); applyUserAccess(); await refreshAuditorOptions(); syncAuditPeriodUI(); await refreshLoadSelect();
-      const selectedValue=`${site}|${type}|${period}`;
-      if([...elLoadSelect.options].some(o=>o.value===selectedValue)) elLoadSelect.value=selectedValue;
-      showStatus(`Loaded ${type==='annual'?'annual':'monthly'} audit for ${site} · ${period}.`);
-    }catch(e){ console.error(e); showStatus('Could not load that audit: '+e.message,true); }
-  }
 
-  async function savePartialAudit(showMessage=true){
-    if(!currentUser){ if(showMessage) showStatus('Please sign in first.',true); return false; }
-    if(!audit.meta.site){ if(showMessage) showStatus('Please select a plant site before saving progress.',true); return false; }
-    if(!audit.meta.month){ if(showMessage) showStatus('Please choose an audit period before saving progress.',true); return false; }
-    if(!['monthly','annual'].includes(audit.meta.auditType||'monthly')){ if(showMessage) showStatus('Please choose a valid audit type.',true); return false; }
-
-    const marksEntered = enteredMarkCount();
-    if(marksEntered===0){
-      if(showMessage) showStatus('No marks have been entered yet. Please enter at least one mark before saving progress.',true);
-      return false;
-    }
-
-    if(partialSaveInFlight){ return false; }
-    partialSaveInFlight=true;
-    applyAuditorSelection();
-    audit.savedAt = new Date().toISOString();
-    audit.meta.org='JASTICA';
-    audit.meta.saveStatus='partial';
-    audit.meta.lastSavedType='partial';
-    if(!audit.meta.auditor){
-      audit.meta.auditor=currentUser.full_name;
-      audit.meta.auditorType=currentUser.role==='external'?'external':'internal';
-    }
-
-    const overallTotal = SECTIONS.reduce((a,s)=>a+sectionTotal(s),0) + q14Total();
-    try{
-      const body=await api('/api/audits',{method:'POST',body:JSON.stringify({
-        site:audit.meta.site,
-        audit_month:audit.meta.month,
-        audit_type:audit.meta.auditType||'monthly',
-        auditor:audit.meta.auditor,
-        auditor_type:audit.meta.auditorType,
-        audit,
-        overall_total:overallTotal
-      })});
-      audit.savedAt=body.audit?.saved_at||audit.savedAt;
-      lastPartialSaveAt=Date.now();
-      await refreshLoadSelect();
-      if(showMessage){
-        showStatus(`Progress saved for ${audit.meta.site} · ${audit.meta.month}. ${marksEntered} mark(s) saved. You can leave and continue later.`);
+      // Fallback only if the saved record does not contain auditor metadata.
+      if(!audit.meta.auditor){
+        audit.meta.auditor=currentUser.full_name;
+        audit.meta.auditorType=currentUser.role==='external'?'external':'internal';
       }
-      return true;
+
+      fullRender();
+      applyUserAccess();
+      await refreshAuditorOptions();
+
+      // refreshAuditorOptions can sync the saved auditor/type if it is in the directory.
+      if(audit.meta.auditorType==='external'){
+        auditorExternal.checked=true; auditorInternal.checked=false;
+      }else if(audit.meta.auditorType==='internal'){
+        auditorInternal.checked=true; auditorExternal.checked=false;
+      }
+
+      await refreshLoadSelect();
+      const selectedValue=`${site}|${month}`;
+      if([...elLoadSelect.options].some(o=>o.value===selectedValue)){
+        elLoadSelect.value=selectedValue;
+      }
+
+      showStatus(`Loaded audit for ${site} · ${month}. Other accessible records remain available in the dropdown.`);
     }catch(e){
       console.error(e);
-      if(showMessage) showStatus('Could not save progress to database: '+e.message,true);
-      return false;
-    }finally{
-      partialSaveInFlight=false;
+      showStatus('Could not load that audit: '+e.message,true);
     }
   }
-
-  // If the auditor leaves the page/tab, try to save the latest draft. Normal
-  // autosaves already happen after changes, so this is an additional safety net.
-  document.addEventListener('visibilitychange', ()=>{
-    if(document.visibilityState==='hidden' && currentUser && audit.meta.site && audit.meta.month && enteredMarkCount()>0){
-      savePartialAudit(false);
-    }
-  });
 
   async function saveAudit(){
     // The existing /api/audits endpoint remains the persistence layer.
@@ -1630,9 +1610,8 @@
     // names if it currently validates sites against a fixed list.
     if(!currentUser){ showStatus('Please sign in first.',true); return; }
     if(!audit.meta.site){ showStatus('Please select a plant site before saving.',true); elSite.focus(); return; }
-    if(!audit.meta.month){ showStatus('Please choose an audit period before saving.',true); return; }
+    if(!audit.meta.month){ showStatus('Please choose an audit month before saving.',true); return; }
     applyAuditorSelection();
-    if(enteredMarkCount()===0){ showStatus('No marks have been entered yet. Please enter marks before saving the final audit.',true); return; }
     const missingScores=SECTIONS.flatMap(s=>s.items.map(([code])=>itemKey(s.id,code))).filter(k=>audit.scores[k]===undefined || audit.scores[k]===null || audit.scores[k]==='');
     if(missingScores.length){ showStatus(`Please enter marks for all 82 checklist questions. ${missingScores.length} mark(s) are still missing.`,true); return; }
     const missingQ14Scores=Q14.filter(q=>audit.q14.score[q.id]===undefined || audit.q14.score[q.id]===null || audit.q14.score[q.id]==='');
@@ -1643,8 +1622,6 @@
     if(!audit.signature || !audit.signature.dataUrl){ showStatus('Please provide the auditor e-signature before saving the final audit.',true); document.getElementById('signatureCanvas')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
     const overallTotal = SECTIONS.reduce((a,s)=>a+sectionTotal(s),0) + q14Total();
     audit.savedAt = new Date().toISOString();
-    audit.meta.saveStatus='final';
-    audit.meta.lastSavedType='final';
     audit.meta.org='JASTICA';
     if(!audit.meta.auditor){
       audit.meta.auditor=currentUser.full_name;
@@ -1654,7 +1631,6 @@
       const body=await api('/api/audits',{method:'POST',body:JSON.stringify({
         site:audit.meta.site,
         audit_month:audit.meta.month,
-        audit_type:audit.meta.auditType||'monthly',
         auditor:audit.meta.auditor,
         auditor_type:audit.meta.auditorType,
         audit,
@@ -1669,7 +1645,7 @@
   async function deleteAudit(){
     const site=audit.meta.site, month=audit.meta.month;
     if(!site || !month){showStatus('Nothing to delete.',true);return;}
-    if(!confirm(`WARNING: You are about to permanently delete the saved ${audit.meta.auditType==='annual'?'annual':'monthly'} audit for ${site} · ${month}.
+    if(!confirm(`WARNING: You are about to permanently delete the saved audit for ${site} · ${month}.
 
 Any unsaved information currently entered on the screen will also be lost.
 
@@ -1677,7 +1653,7 @@ If you have not saved your completed audit, click Cancel and save it first.
 
 Continue with deletion?`))return;
     try{
-      await api(`/api/audits?site=${encodeURIComponent(site)}&type=${encodeURIComponent(audit.meta.auditType||'monthly')}&period=${encodeURIComponent(month)}`,{method:'DELETE'});
+      await api(`/api/audits?site=${encodeURIComponent(site)}&month=${encodeURIComponent(month)}`,{method:'DELETE'});
       audit=blankAudit(); audit.meta.org='JASTICA'; audit.meta.site=site; audit.meta.auditor=currentUser?.full_name||'';
       audit.meta.auditorType=currentUser?.role==='external'?'external':'internal';
       const now=new Date(); audit.meta.month=now.toISOString().slice(0,7);
@@ -1692,7 +1668,7 @@ Continue with deletion?`))return;
     const user=await loadCurrentUser();
     if(!user) throw new Error('Signed in but the user session could not be loaded.');
     authScreen.style.display='none'; root.style.display='block';
-    audit=blankAudit(); audit.meta.org='JASTICA'; audit.meta.auditType='monthly'; audit.meta.month=new Date().toISOString().slice(0,7);
+    audit=blankAudit(); audit.meta.org='JASTICA'; audit.meta.month=new Date().toISOString().slice(0,7);
     applyUserAccess(); await refreshAuditorOptions(); fullRender(); applyUserAccess(); await refreshAuditorOptions(); await refreshLoadSelect();
   }
 
@@ -1707,16 +1683,23 @@ Continue with deletion?`))return;
   signupSites.innerHTML=getAllSites().map(s=>`<label style="font-size:12px;"><input type="checkbox" name="signupSite" value="${escHtml(s)}"> ${escHtml(s)}</label>`).join('');
 
   function syncSignupRoleUI(){
-    signupSitesField.style.display='block';
-    document.querySelectorAll('input[name="signupSite"]').forEach(x=>x.disabled=false);
+    const role=document.querySelector('input[name="signupRole"]:checked')?.value || 'internal';
+    const internal=role==='internal';
+    signupSitesField.style.display=internal?'block':'none';
+    if(!internal){
+      document.querySelectorAll('input[name="signupSite"]').forEach(x=>x.checked=false);
+    }
   }
 
-  signupBtn.addEventListener('click',async()=>{
+  signupBtn.addEventListener('click',()=>{
     signupModal.style.display='flex';
-    signupMsg.textContent=''; signupMsg.style.color='var(--red)'; signupForm.reset();
-    await loadSiteDirectory();
+    signupMsg.textContent='';
+    signupMsg.style.color='var(--red)';
+    signupForm.reset();
     signupSites.innerHTML=getAllSites().map(s=>`<label style="font-size:12px;"><input type="checkbox" name="signupSite" value="${escHtml(s)}"> ${escHtml(s)}</label>`).join('');
-    syncSignupRoleUI(); signupFullName.focus();
+    document.querySelector('input[name="signupRole"][value="internal"]').checked=true;
+    syncSignupRoleUI();
+    signupFullName.focus();
   });
 
   signupCancel.addEventListener('click',()=>{
@@ -1725,6 +1708,9 @@ Continue with deletion?`))return;
     syncSignupRoleUI();
   });
 
+  document.querySelectorAll('input[name="signupRole"]').forEach(r=>{
+    r.addEventListener('change',syncSignupRoleUI);
+  });
 
   signupForm.addEventListener('submit',async e=>{
     e.preventDefault();
@@ -1732,15 +1718,15 @@ Continue with deletion?`))return;
     signupMsg.textContent='Creating account…';
 
     try{
-      const role='external';
+      const role=document.querySelector('input[name="signupRole"]:checked')?.value || 'internal';
       const fullName=signupFullName.value.trim();
       const username=document.getElementById('signupUsername').value.trim();
       const password=document.getElementById('signupPassword').value;
       const sites=[...document.querySelectorAll('input[name="signupSite"]:checked')].map(x=>x.value);
 
       if(!fullName || !username || !password) throw new Error('Please complete all required fields.');
-      if(sites.length===0){
-        throw new Error('Please select at least one assigned plant/site.');
+      if(role==='internal' && sites.length===0){
+        throw new Error('Please select at least one assigned site for an Internal Auditor.');
       }
 
       const body=await api('/api/signup',{
@@ -1787,13 +1773,12 @@ Continue with deletion?`))return;
     }
     const rows = [];
     rows.push(['JASTECA National Awards — "Taiki Akimoto" Japanese Management Excellence Awards']);
-    rows.push(['5S Audit Sheet — Service & Manufacturing Sectors']);
+    rows.push(['5S Monthly Audit Sheet — Service & Manufacturing Sectors']);
     rows.push([]);
     rows.push(['Organisation', audit.meta.org||'']);
     rows.push(['Plant Site', audit.meta.site||'']);
-    rows.push(['Audit Type', audit.meta.auditType==='annual'?'Annual Audit':'Monthly Audit']);
     rows.push(['Department / Sub-area', audit.meta.dept||'']);
-    rows.push(['Audit period', audit.meta.month||'']);
+    rows.push(['Audit month', audit.meta.month||'']);
     rows.push(['Auditor', audit.meta.auditor||'']);
     rows.push(['Saved at', audit.savedAt||'']);
     rows.push([]);
@@ -1864,9 +1849,8 @@ Continue with deletion?`))return;
     const metaRow = (k,v)=>`<tr><td style="border:1px solid #999;width:22%;background:#F2F4EF;"><b>${esc(k)}</b></td><td style="border:1px solid #999;">${esc(v)}</td></tr>`;
     body += metaRow('Organisation', audit.meta.org);
     body += metaRow('Plant Site', audit.meta.site);
-    body += metaRow('Audit Type', audit.meta.auditType==='annual'?'Annual Audit':'Monthly Audit');
     body += metaRow('Department / Sub-area', audit.meta.dept);
-    body += metaRow('Audit period', audit.meta.month);
+    body += metaRow('Audit month', audit.meta.month);
     body += metaRow('Auditor', audit.meta.auditor);
     body += `</table>`;
 
@@ -1940,10 +1924,8 @@ Continue with deletion?`))return;
     audit = blankAudit();
     audit.meta.site = keepSite;
     const now = new Date();
-    audit.meta.auditType = 'monthly';
     audit.meta.month = now.toISOString().slice(0,7);
     applyUserAccess();
-    syncAuditPeriodUI();
     fullRender();
     refreshAuditorOptions().then(refreshLoadSelect);
   });
@@ -1951,13 +1933,11 @@ Continue with deletion?`))return;
 
   // ---------------- Init ----------------
   (async function init(){
-    await loadSiteDirectory();
     const user = await loadCurrentUser();
     if(user){
       authScreen.style.display='none';
       root.style.display='block';
       audit.meta.org='JASTICA';
-      audit.meta.auditType='monthly';
       audit.meta.month=new Date().toISOString().slice(0,7);
       applyUserAccess();
       await refreshAuditorOptions();
