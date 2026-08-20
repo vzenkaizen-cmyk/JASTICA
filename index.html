@@ -781,7 +781,8 @@
     const sites=getAllSites();
     elSite.innerHTML =
       '<option value="">— select site —</option>' +
-      sites.map(s=>`<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('');
+      sites.map(s=>`<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('') +
+      '<option value="__add_new__">＋ Add New Plant</option>';
     if(selectedSite && sites.includes(selectedSite)) elSite.value=selectedSite;
   }
 
@@ -1217,13 +1218,22 @@
     if(auditorInternal) auditorInternal.checked = audit.meta.auditorType === 'internal';
     if(auditorExternal) auditorExternal.checked = audit.meta.auditorType === 'external';
   }
+  let lastValidSite = audit.meta.site || '';
   elSite.addEventListener('change', async e=>{
     if(e.target.value==='__add_new__'){
-      e.target.value=audit.meta.site||'';
+      e.target.value=lastValidSite||'';
       openAddPlantModal();
       return;
     }
-    audit.meta.site=e.target.value;
+    const value=e.target.value;
+    const canUse = !value || currentUser?.role==='admin' || (Array.isArray(currentUser?.sites) && currentUser.sites.includes(value));
+    if(!canUse){
+      e.target.value=lastValidSite||'';
+      showStatus('This plant is not assigned to your account. You cannot view or enter its audit.', true);
+      return;
+    }
+    lastValidSite=value;
+    audit.meta.site=value;
     await refreshLoadSelect();
     queuePartialSave();
     refreshAll();
@@ -1484,12 +1494,20 @@
     }
 
     const assignedSites = Array.isArray(currentUser.sites) ? currentUser.sites : [];
-    const allowed = currentUser.role === 'admin' ? getAllSites() : assignedSites;
+    const allSites = getAllSites();
+    const allowed = currentUser.role === 'admin' ? allSites : assignedSites;
 
+    // Show every registered plant in the dropdown. Non-admin users can only
+    // select the plants assigned to their account; the other plants remain
+    // visible but disabled so their marks cannot be opened or saved.
     const selectedSite = audit.meta.site;
     elSite.innerHTML =
       '<option value="">— select site —</option>' +
-      allowed.map(s=>`<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('');
+      allSites.map(s=>{
+        const canUse = currentUser.role === 'admin' || allowed.includes(s);
+        return `<option value="${escHtml(s)}"${canUse?'':' disabled'}>${escHtml(s)}${canUse?'':' (not assigned)'}</option>`;
+      }).join('') +
+      '<option value="__add_new__">＋ Add New Plant</option>';
 
     if(selectedSite && allowed.includes(selectedSite)){
       elSite.value=selectedSite;
