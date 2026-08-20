@@ -1,0 +1,10 @@
+{
+  "name": "jastica-5s-audit-neon",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@neondatabase/serverless": "latest",
+    "bcryptjs": "latest"
+  }
+}
